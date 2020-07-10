@@ -27,13 +27,25 @@ class Chat extends Component {
     }, 1000);
   }
 
+  sendMessage = (msg) => {
+    let { messages } = this.state;
+    messages = [...messages, msg];
+    const robotMsg = answersData
+      .filter((answer) => !answer.tags.includes('DEFAULT'))
+      .find((answer) => answer.tags.some((tag) => msg.text.indexOf(tag) >= 0));
+    if (robotMsg !== undefined) messages.push(robotMsg);
+    this.setState({
+      messages,
+    });
+  };
+
   render() {
     const { shop, messages } = this.state;
     return (
       <main className="Chat">
         <ChatHeader shop={shop} />
         <ChatBox messages={messages} />
-        <ChatInput />
+        <ChatInput sendMessage={this.sendMessage} />
       </main>
     );
   }
